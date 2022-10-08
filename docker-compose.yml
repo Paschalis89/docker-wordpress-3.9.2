@@ -1,0 +1,53 @@
+version: '3.9'
+networks:
+  website:
+    name: "website"
+
+services:
+  wordpress:
+    image: wordpress:3.9.2
+    container_name: "wordpress"
+    restart: always
+    depends_on:
+      - database
+    networks: ["website"]
+    ports:
+      - 8088:80
+    environment:
+      WORDPRESS_DB_HOST: database
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_NAME: wordpress
+      MYSQL_PORT_3306_TCP: tcp://database:3306
+    volumes:
+      - /tmp/docker/wordpress:/var/www/html
+
+  database:
+    image: mysql:5.7
+    container_name: "mysql-wordpress"
+    restart: always
+    networks: ["website"]
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: password
+#      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: "%%"
+    volumes:
+      - /tmp/docker/db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: "phpmyadmin-wordpress"
+    restart: always
+    depends_on:
+      - database
+    ports:
+      - 8080:80
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: password
+    networks: ["website"]
