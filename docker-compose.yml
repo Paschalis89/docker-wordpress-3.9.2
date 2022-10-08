@@ -1,4 +1,4 @@
-version: '3.9'
+version: '3.8'
 networks:
   website:
     name: "website"
@@ -16,11 +16,11 @@ services:
     environment:
       WORDPRESS_DB_HOST: database
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_PASSWORD: password01
       WORDPRESS_DB_NAME: wordpress
       MYSQL_PORT_3306_TCP: tcp://database:3306
-    volumes:
-      - /tmp/docker/wordpress:/var/www/html
+    volumes: 
+      - "./wordpress:/var/www/html"
 
   database:
     image: mysql:5.7
@@ -32,12 +32,12 @@ services:
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
-      MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: password01
 #      MYSQL_RANDOM_ROOT_PASSWORD: '1'
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password01
       MYSQL_ROOT_HOST: "%%"
     volumes:
-      - /tmp/docker/db:/var/lib/mysql
+      - "./mysql/data:/var/lib/mysql"
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -49,5 +49,9 @@ services:
       - 8080:80
     environment:
       PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password01
     networks: ["website"]
+
+volumes:
+  database:
+  wordpress:
