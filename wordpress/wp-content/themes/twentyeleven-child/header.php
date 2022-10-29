@@ -159,3 +159,5 @@ if ( is_singular() && get_option( 'thread_comments' ) ) {
 
 
 	<div id="main">
+<?php echo do_shortcode('[google-translator]'); ?>
+
